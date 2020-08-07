@@ -1,0 +1,121 @@
+@media screen and (min-width: 1000px) {
+
+  .app-root {
+    width: 1200px;
+    min-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+  }
+
+  .g-nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .g-main {
+      flex: 1;
+
+    }
+
+    .g-menu {
+      display: flex;
+      padding: 5px 0 7px 20px;
+      text-align: right;
+
+      .m-logo {
+        flex: 1;
+        text-align: left!important;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      
+      .m-menu-item {
+        display: inline-block;
+
+
+        img {
+          display: none;
+        }
+
+        span {
+          padding: 0 3px;
+          margin: 0 15px 0 0;
+          cursor: pointer;
+          transition: .3s;
+          text-decoration: none;
+          color: #666;
+        }
+      }
+
+      
+    }
+  }
+
+}
+
+
+
+@media screen and (max-width: 1000px) {
+
+  .c-active {
+    color: #ff3300!important;
+  }
+
+  .app-root {
+    width: 100%;
+    margin: 0 auto;
+    background: #fff;
+    height: 100%;
+
+    .g-nav {
+      height: 100%;
+    }
+  }
+
+
+
+  .g-nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .g-main {
+      height: 100%;
+    }
+
+    .g-menu {
+      display: flex;
+      height: 56px;
+      border-top: 1px solid #f0f0f0;
+      z-index: 100;
+      background: #f7f7f7;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+
+      .m-menu-logout {
+        display: none!important;
+      }
+
+      .m-menu-item {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        
+        &>img {
+          width: 24px;
+          margin: 5px 0 2px 0;
+          color: #ff3300;
+        }
+      }
+
+      a {
+        
+      }
+    }
+  }
+
+}

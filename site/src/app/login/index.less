@@ -1,0 +1,61 @@
+
+.g-login {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  z-index: 999;
+  flex-direction: column;
+  background: #fff;
+  width: 100%;
+  height: 100vh;
+  /*justify-content: center;*/
+  align-items: center;
+
+  .m-login {
+    background: #333;
+    width: 600px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+
+    .m-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 10px 20px;
+
+      .m-title {
+        font-size: 20px;
+        color: #fff;
+
+        img {
+          width: 64px;
+          height: 64px;
+          margin-right: 20px;
+        }
+      }
+    }
+
+    .m-form {
+      padding: 0;
+      display: flex;
+      align-items: flex-end;
+      flex: 1;
+      background: #eee;
+      padding: 20px 30px;
+      border: 1px solid #ddd;
+
+      form {
+        width: 100%;
+      }
+    }
+  }
+}
+
+

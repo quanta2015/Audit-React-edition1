@@ -1,0 +1,169 @@
+
+body {
+  -webkit-font-smoothing: antialiased;
+  color: #3C4E65;
+  padding: 0;
+  margin: 0;
+  font-family: Georgia,Microsoft Yahei;
+  color: #666;
+  font-size: 12px;
+  /*font-family: Avenir , "Open Sans" , "Helvetica Neue" , Helvetica , Arial , Verdana , Roboto , "游ゴシック" , "Yu Gothic" , "游ゴシック体" , "YuGothic" , "ヒラギノ角ゴ Pro W3" , "Hiragino Kaku Gothic Pro" , "Meiryo UI" , "メイリオ" , Meiryo , "ＭＳ Ｐゴシック" , "MS PGothic" , sans-serif;*/
+}
+
+
+a { color: #333; }
+
+button + button { margin-left: 5px; }
+
+
+#root {
+  width: 100%;
+  min-height: 100%;
+  background: #eee;
+}
+
+.c-red {
+  background: #dd0000!important;
+  color: #fff!important;
+  border: 1px solid #dd0000!important;
+}
+
+
+.c-blue {
+  background: #3d74aa!important;
+  color: #fff!important;
+  border: 1px solid #3d74aa!important;
+}
+
+.c-yell {
+  background: #e5a800!important;
+  color: #fff!important;
+  border: 1px solid #e5a800!important;
+}
+
+.c-grey {
+    background: #eee !important;
+    color: #666!important;
+    border: 1px solid #FAFBFC!important;
+}
+
+/*.c-grey {
+    background: #FAFBFC !important;
+    color: #666!important;
+    border: 1px solid #FAFBFC!important;
+}*/
+
+.c-black {
+    background: #666 !important;
+    color: #fff!important;
+    border: 1px solid #666!important;
+}
+
+.c-green {
+  background: #269F9A!important;
+  color: #fff!important;
+  border: 1px solid #269F9A!important;
+}
+
+.c-orange {
+  background: #fa8c16!important;
+  color: #fff!important;
+  border: 1px solid #fa8c16!important;
+}
+
+
+.fn-hide {
+  display: none!important
+}
+
+.fn-show {
+  display: block!important
+}
+
+
+.m-icon {
+  fontSize: 16px;
+  height: 18px;
+  margin-right:5px;
+}
+
+
+
+.m-del {
+  position: absolute;
+  height: 24px;
+  width: 24px;
+  border-radius: 30px;
+  background: #000;
+  right: -12px;
+  top: -12px;
+  cursor: pointer;
+  transition: 0.5s;
+  z-index: 20000;
+  color: #fff;
+}
+
+.m-del:before, .m-del:after {
+    content: ' ';
+    position: absolute;
+    right: 11px;
+    top: 6px;
+    border-left: 2px solid #eee;
+    height: 12px;
+    width: 0;
+}
+
+.m-del:before {
+  transform: rotate(45deg);
+}
+
+.m-del:after {
+  transform: rotate(-45deg);
+}
+
+.input-select, .input-text, .input-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+  outline: none;
+  padding: 0.8em;
+  color: #666;
+  background: #fff;
+  height: 40px;
+}
+
+.input-btn {
+  font-size: 16px;
+  height: 40px;
+}
+
+.input-btn-inverse {
+  color: #3d74aa;
+  background-color: #ffffff;
+}
+
+.input-center {
+  text-align: center;
+}
+
+.ant-btn-block {
+    height: 45px!important;
+    font-size: 16px!important;
+}
+
+
+.ant-switch-checked {
+  background-color: #00C062!important;
+}
+
+.ant-tag {
+    text-align: left!important;
+    white-space: break-spaces!important;
+}
+
+.u-keyword-c {
+  width: 100px!important;
+}
+.u-keyword-e {
+  flex:1;
+}
