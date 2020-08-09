@@ -2,6 +2,7 @@
 /server/.vscode
 /server/node_modules
 /server/upload
+/server/export
 
 /site/build
 /site/node_modules

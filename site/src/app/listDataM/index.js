@@ -3,7 +3,7 @@ import { inject } from 'mobx-react'
 import { Input, Button, InputGroup, Radio, Switch, Icon,Tag, Table, Spin, Divider, Result, Modal, message, Skeleton } from "antd";
 import EXIF from '@util/small-exif'
 import Highlighter from 'react-highlight-words';
-import { formatStat,getStatFilter,getMethodFilter,getStatusFilter}  from 'util/stat'
+import { formatStat,getStatFilter,getMethodFilter,getStatusFilter, getOperFilter}  from 'util/stat'
 import '../listDataS/index.less'
 import {API_SERVER} from 'constant/apis'
 import {STAT, STATUS} from 'constant/data'
@@ -25,8 +25,6 @@ class listDataM extends React.Component {
       status: null,
     }
 	}
-
-  
 
 
   getColumnSearchProps = dataIndex => ({
@@ -59,7 +57,7 @@ class listDataM extends React.Component {
     filterIcon: filtered => (
       <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
-    onFilter: (value, record) =>
+    onFilter: (value, record) => 
       record[dataIndex]
         .toString()
         .toLowerCase()
@@ -99,7 +97,8 @@ class listDataM extends React.Component {
 
     this.setState({ loading: true })
     let r = await this.props.userStore.getProjListT()
-    this.setState({ loading: false, list: r.data})
+    // console.log(r.data)
+    this.setState({ loading: false, list: r.data })
   }
 
   doEdit = (e)=>{
@@ -266,15 +265,29 @@ class listDataM extends React.Component {
         title: 'ID',
         dataIndex: 'key',
         key: 'key',
-        width: '60px',
+        width: '80px',
+        ...this.getColumnSearchProps('key'),
       },{
         title: '流水号',
         dataIndex: 'sid',
         key: 'sid',
+        width: '130px',
         ...this.getColumnSearchProps('sid'),
+      },{
+        title: '操作员',
+        dataIndex: 'id',
+        dataIndex: 'id',
+        width: '80px',
+        filters: getOperFilter(),
+        onFilter: (value, record) => `s${parseInt(record.id/list.length*10)+1}` === value ,
+        render: d =>
+          <Tag>
+            s{parseInt(d/list.length*10)+1}
+          </Tag>
       },{
         title: '操作状态',
         dataIndex: 'status',
+        key: 'status',
         width: '120px',
         filters: getStatFilter(),
         onFilter: (value, record) => record.status === STATUS[value],
@@ -312,9 +325,9 @@ class listDataM extends React.Component {
         width: '180px',
         render: (text, record, index) => (
           < >
-            {<Button type="default" onClick={this.doStatus.bind(this,record)}>状态</Button>}
+            {(record.exist == 1) && <Button type="default" onClick={this.doStatus.bind(this,record)}>状态</Button>}
             {(record.status != 4) && <Button type="default" onClick={this.doEdit.bind(this,record)}>详情</Button> }
-            {(record.status == 4) && <Button type="primary" onClick={this.doEdit.bind(this,record)}>开始编辑</Button> }
+            {(record.exist == 1)&&(record.status == 4) && <Button type="primary" onClick={this.doEdit.bind(this,record)}>开始编辑</Button> }
           </>
         ),
       },

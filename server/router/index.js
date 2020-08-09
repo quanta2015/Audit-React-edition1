@@ -126,10 +126,7 @@ router.post('/saveProject',async (req, res, next) =>{
   let user = await decodeUser(req)
   let params = req.body
   let sql  = `CALL PROC_PROJ_SAVE(?)`
-
-  for(let key in params){
-    if (params[key] === null) params[key] = ''
-  }
+  for(let key in params) {  params[key] = (params[key] === null)?'':params[key] }
 
   let r = await callP(sql, params, res)
   res.status(200).json({ code: 200, data: r[0] })
@@ -139,17 +136,26 @@ router.post('/subProject1',async (req, res, next) =>{
   let user = await decodeUser(req)
   let params = req.body
   params.mark = user.mark
-  let sql  = `CALL PROC_PROJ_SUB1(?)`
-  let r = await callP(sql, params, res)
+  for(let key in params) {  params[key] = (params[key] === null)?'':params[key] }
+
+  let sql1  = `CALL PROC_PROJ_SAVE(?)`
+  let sql2  = `CALL PROC_PROJ_SUB1(?)`
+  let q = await callP(sql1, params, res)
+  let r = await callP(sql2, params, res) 
+
   res.status(200).json({ code: 200, data:r })
 })
 
 router.post('/subProject2',async (req, res, next) =>{
   let user = await decodeUser(req)
   let params = req.body
-  params.mark = user.mark
-  let sql  = `CALL PROC_PROJ_SUB2(?)`
-  let r = await callP(sql, params, res)
+  for(let key in params) {  params[key] = (params[key] === null)?'':params[key] }
+  
+  let sql1  = `CALL PROC_PROJ_SAVE(?)`
+  let sql2  = `CALL PROC_PROJ_SUB2(?)`
+
+  let q = await callP(sql1, params, res)
+  let r = await callP(sql2, params, res)
   res.status(200).json({ code: 200, data:r })
 })
 
@@ -157,17 +163,26 @@ router.post('/subProject3',async (req, res, next) =>{
   let user = await decodeUser(req)
   let params = req.body
   params.mark = user.mark
-  let sql  = `CALL PROC_PROJ_SUB3(?)`
-  let r = await callP(sql, params, res)
+  for(let key in params) {  params[key] = (params[key] === null)?'':params[key] }
+
+  let sql1  = `CALL PROC_PROJ_SAVE(?)`
+  let sql2  = `CALL PROC_PROJ_SUB3(?)`
+  
+  let q = await callP(sql1, params, res)
+  let r = await callP(sql2, params, res)
   res.status(200).json({ code: 200, data:r })
 })
 
 router.post('/subProject4',async (req, res, next) =>{
   let user = await decodeUser(req)
   let params = req.body
-  params.mark = user.mark
-  let sql  = `CALL PROC_PROJ_SUB4(?)`
-  let r = await callP(sql, params, res)
+  for(let key in params) {  params[key] = (params[key] === null)?'':params[key] }
+  
+  let sql1  = `CALL PROC_PROJ_SAVE(?)`
+  let sql2  = `CALL PROC_PROJ_SUB4(?)`
+
+  let q = await callP(sql1, params, res)
+  let r = await callP(sql2, params, res)
   res.status(200).json({ code: 200, data:r })
 })
 
@@ -186,6 +201,16 @@ router.post('/setProjStatus',async (req, res, next) =>{
   let r = await callP(sql, params, res)
   res.status(200).json({ code: 200, data:r })
 })
+
+router.post('/auditRet',async (req, res, next) =>{
+  let params = req.body
+  let sql  = `CALL PROC_AUDIT_RET(?)`
+  let r = await callP(sql, params, res)
+  res.status(200).json({ code: 200, data:r[0] })
+})
+
+
+
 
 
 //上传文件
@@ -208,7 +233,103 @@ router.post('/upload', function (req, res) {
 })
 
 
+var PizZip = require('pizzip')
+var Docxtemplater = require('docxtemplater')
 
+
+router.get('/export', async (req, res) => {
+
+  let sql  = `CALL PROC_EXPORT()`
+  let r = await callP(sql, null, res)
+
+  for(let i=0;i<r.length;i++) {
+
+    let content = fs.readFileSync(path.resolve(__dirname, '../public/in.docx'), 'binary');
+    let zip = new PizZip(content);
+    let doc;
+    try { doc = new Docxtemplater(zip) } catch (error) { errorHandler(error); }
+
+    let data = r[i]
+    data.mid = (data.mid+'').padStart(4, '0')
+    data.ret_reason1 = '□'
+    data.ret_reason2 = '□'
+    data.ret_reason3 = '□'
+    data.ret_reason4 = '□'
+
+    if (data.ret == 1) {
+      data.ret = '是☑︎                     否□'
+    }else{
+      data.ret = '是□                     否☑︎'
+
+      if (data.ret_reason === '不符合公告要求') {
+        [data.ret_reason1,data.ret_reason2,data.ret_reason3,data.ret_reason4] = ['☑︎','□','□','□']
+      }else if (data.ret_reason === '著作和著者国内学术评标指标较低') {
+        [data.ret_reason1,data.ret_reason2,data.ret_reason3,data.ret_reason4] = ['□','☑︎','□','□']
+      }else if (data.ret_reason === '国际传播指标较低') {
+        [data.ret_reason1,data.ret_reason2,data.ret_reason3,data.ret_reason4] = ['□','□','☑︎','□']
+      }else if (data.ret_reason === '未初步达成国外出版意向') {
+        [data.ret_reason1,data.ret_reason2,data.ret_reason3,data.ret_reason4] = ['□','□','□','☑︎']
+      } 
+    }
+
+    if (data.rec_cop === '是') {
+      data.rec_cop = '是☑︎   否□'
+    }else {
+      data.rec_cop = '是□   否☑︎'
+    }
+
+    if (typeof(data.trans_eval) === 'undefined') {
+      data.trans_eval = '非常关注□    比较关注□   一般关注□   不关注□'
+    }else if (data.trans_eval === '非常关注') {
+      data.trans_eval = '非常关注☑︎    比较关注□   一般关注□   不关注□'
+    }else if (data.trans_eval === '比较关注') {
+      data.trans_eval = '非常关注□    比较关注☑︎   一般关注□   不关注□'
+    }else if (data.trans_eval === '一般关注□') {
+      data.trans_eval = '非常关注□    比较关注□   一般关注☑︎   不关注□'
+    }else if (data.trans_eval === '不关注□') {
+      data.trans_eval = '非常关注□    比较关注□   一般关注□   不关注☑︎'
+    }else {
+      data.trans_eval = '非常关注□    比较关注□   一般关注□   不关注□'
+    }
+
+    for(let key in data) {  data[key] = (data[key] === null)?'':data[key] }
+
+    doc.setData(data);
+    try { doc.render() } catch (error) { errorHandler(error); }
+    var buf = doc.getZip().generate({ type: 'nodebuffer' });
+    fs.writeFileSync(path.resolve(__dirname, `../export/${data.mid}.docx`), buf);
+    console.log(`${data.mid} finished....`)
+  }
+
+  res.status(200).json({ code: 200 })
+})
+
+
+
+
+function replaceErrors(key, value) {
+  if (value instanceof Error) {
+    return Object.getOwnPropertyNames(value).reduce(function(error, key) {
+      error[key] = value[key];
+      return error;
+    }, {});
+  }
+  return value;
+}
+
+function errorHandler(error) {
+  console.log(JSON.stringify({
+    error: error
+  }, replaceErrors));
+
+  if (error.properties && error.properties.errors instanceof Array) {
+    const errorMessages = error.properties.errors.map(function(error) {
+      return error.properties.explanation;
+    }).join("\n");
+    console.log('errorMessages', errorMessages);
+  }
+  throw error;
+}
 
 
 

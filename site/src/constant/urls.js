@@ -12,4 +12,5 @@ export const API_PROJ_SUB3    = API_SERVER + '/subProject3'
 export const API_PROJ_SUB4    = API_SERVER + '/subProject4'
 export const API_PROJ_SUB5    = API_SERVER + '/subProject5'
 export const API_PROJ_STATUS  = API_SERVER + '/setProjStatus'
+export const API_AUDIT_RET    = API_SERVER + '/auditRet'
 

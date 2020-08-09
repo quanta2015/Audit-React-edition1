@@ -13,8 +13,10 @@ class User extends BaseActions {
   async login(params) {
     const r = await this.post(urls.API_USER_LOGIN, params)
     if (r.code=== 200) {
-      jwt.saveToken(r.token)
-      this.currUser = r.data
+      runInAction(() => {
+        jwt.saveToken(r.token)
+        this.currUser = r.data
+      })
     }
     return r
   }
@@ -75,7 +77,10 @@ class User extends BaseActions {
     return await this.post(urls.API_PROJ_STATUS,params)
   }
 
-
+  @action
+  async setAuditRet(params) {
+    return await this.post(urls.API_AUDIT_RET,params)
+  }
 
 
   

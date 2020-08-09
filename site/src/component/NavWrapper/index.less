@@ -23,8 +23,29 @@
       padding: 5px 0 7px 20px;
       text-align: right;
 
-      .m-logo {
+      .m-query {
+        display: flex;
+        margin: 0 20px;
+        justify-content: center;
         flex: 1;
+        align-items: center;
+
+        &>div {
+          display: flex;
+        }
+
+        span {
+          margin: 0;
+        }
+
+        label {
+          padding: 0 10px;
+          color: #dd0000;
+          text-align: center;
+        }
+      }
+
+      .m-logo {
         text-align: left!important;
         font-size: 16px;
         font-weight: bold;

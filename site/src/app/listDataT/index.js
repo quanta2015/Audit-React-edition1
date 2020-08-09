@@ -3,7 +3,7 @@ import { inject } from 'mobx-react'
 import { Input, Form, Button, InputGroup, Radio, Switch, Icon,Tag, Table, Spin, Divider, Result, Modal, message, Skeleton } from "antd";
 import EXIF from '@util/small-exif'
 import Highlighter from 'react-highlight-words';
-import { formatStat,getStatFilter,getMethodFilter,getStatusFilter}  from 'util/stat'
+import { formatStat,getStatFilter,getMethodFilter,getStatusFilter,getOperFilter}  from 'util/stat'
 import '../listDataS/index.less'
 import {API_SERVER} from 'constant/apis'
 import {STAT, STATUS} from 'constant/data'
@@ -24,7 +24,7 @@ class listData extends React.Component {
     }
 	}
 
-    getColumnSearchProps = dataIndex => ({
+  getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input
@@ -148,14 +148,118 @@ class listData extends React.Component {
   }
 
   doSubmitT1 = async () => {
-    let params = { id: this.state.record.key }
+    let params = {
+      id:         this.state.record.key,
+      zhi_all_d:  this.state.record.zhi_all_d,
+      zhi_all_p:  this.state.record.zhi_all_p,
+      zhi_alld_d: this.state.record.zhi_alld_d,
+      zhi_alld_p: this.state.record.zhi_alld_p,
+      zhi_allq_d: this.state.record.zhi_allq_d,
+      zhi_allq_p: this.state.record.zhi_allq_p,
+      zhi_avg_d:  this.state.record.zhi_avg_d,
+      zhi_avg_p:  this.state.record.zhi_avg_p,
+      zhi_core_d: this.state.record.zhi_core_d,
+      zhi_core_p: this.state.record.zhi_core_p,
+      zhi_cscd_d: this.state.record.zhi_cscd_d,
+      zhi_cscd_p: this.state.record.zhi_cscd_p,
+      zhi_cssci_d:this.state.record.zhi_cssci_d,
+      zhi_cssci_p:this.state.record.zhi_cssci_p,
+      zhi1_file:  this.state.record.zhi1_file,
+      zhi2_file:  this.state.record.zhi2_file,
+      cao_all:    this.state.record.cao_all,
+      cao_fav:    this.state.record.cao_fav,
+      cao_index:  this.state.record.cao_index,
+      cao_quote:  this.state.record.cao_quote,
+      cao1_file:   this.state.record.cao1_file,
+      cao2_file:   this.state.record.cao2_file,
+      cssci_quote:this.state.record.cssci_quote,
+      cssci_file: this.state.record.cssci_file,
+      dou_mark:   this.state.record.dou_mark,
+      dou_star1:  this.state.record.dou_star1,
+      dou_start2: this.state.record.dou_start2,
+      dou_file:   this.state.record.dou_file,
+      int_key_cn: this.state.record.int_key_cn,
+      int_key_en: this.state.record.int_key_en,
+      int_file:   this.state.record.int_file,
+      ws_2010:    this.state.record.ws_2010,
+      ws_2011:    this.state.record.ws_2011,
+      ws_2012:    this.state.record.ws_2012,
+      ws_2013:    this.state.record.ws_2013,
+      ws_2014:    this.state.record.ws_2014,
+      ws_2015:    this.state.record.ws_2015,
+      ws_2016:    this.state.record.ws_2016,
+      ws_2017:    this.state.record.ws_2017,
+      ws_2018:    this.state.record.ws_2018,
+      ws_2019:    this.state.record.ws_2019,
+      ws_high:    this.state.record.ws_high,
+      ws_hot:     this.state.record.ws_hot,
+      ws_open:    this.state.record.ws_open,
+      ws_ret:     this.state.record.ws_ret,
+      ws1_file:   this.state.record.ws1_file,
+      ws2_file:   this.state.record.ws2_file,
+      trans_eval: this.state.record.trans_eval,
+      trans1_file:this.state.record.trans1_file,
+      trans2_file:this.state.record.trans2_file,
+    }
     let r = await this.props.userStore.subProject2(params)
     this.setState({ loading: false, show: false,list: r.data  })
     message.success('提交成功！')
   }
 
   doSubmitT2 = async () => {
-    let params = { id: this.state.record.key }
+    let params = {
+      id:         this.state.record.key,
+      zhi_all_d:  this.state.record.zhi_all_d,
+      zhi_all_p:  this.state.record.zhi_all_p,
+      zhi_alld_d: this.state.record.zhi_alld_d,
+      zhi_alld_p: this.state.record.zhi_alld_p,
+      zhi_allq_d: this.state.record.zhi_allq_d,
+      zhi_allq_p: this.state.record.zhi_allq_p,
+      zhi_avg_d:  this.state.record.zhi_avg_d,
+      zhi_avg_p:  this.state.record.zhi_avg_p,
+      zhi_core_d: this.state.record.zhi_core_d,
+      zhi_core_p: this.state.record.zhi_core_p,
+      zhi_cscd_d: this.state.record.zhi_cscd_d,
+      zhi_cscd_p: this.state.record.zhi_cscd_p,
+      zhi_cssci_d:this.state.record.zhi_cssci_d,
+      zhi_cssci_p:this.state.record.zhi_cssci_p,
+      zhi1_file:  this.state.record.zhi1_file,
+      zhi2_file:  this.state.record.zhi2_file,
+      cao_all:    this.state.record.cao_all,
+      cao_fav:    this.state.record.cao_fav,
+      cao_index:  this.state.record.cao_index,
+      cao_quote:  this.state.record.cao_quote,
+      cao1_file:   this.state.record.cao1_file,
+      cao2_file:   this.state.record.cao2_file,
+      cssci_quote:this.state.record.cssci_quote,
+      cssci_file: this.state.record.cssci_file,
+      dou_mark:   this.state.record.dou_mark,
+      dou_star1:  this.state.record.dou_star1,
+      dou_start2: this.state.record.dou_start2,
+      dou_file:   this.state.record.dou_file,
+      int_key_cn: this.state.record.int_key_cn,
+      int_key_en: this.state.record.int_key_en,
+      int_file:   this.state.record.int_file,
+      ws_2010:    this.state.record.ws_2010,
+      ws_2011:    this.state.record.ws_2011,
+      ws_2012:    this.state.record.ws_2012,
+      ws_2013:    this.state.record.ws_2013,
+      ws_2014:    this.state.record.ws_2014,
+      ws_2015:    this.state.record.ws_2015,
+      ws_2016:    this.state.record.ws_2016,
+      ws_2017:    this.state.record.ws_2017,
+      ws_2018:    this.state.record.ws_2018,
+      ws_2019:    this.state.record.ws_2019,
+      ws_high:    this.state.record.ws_high,
+      ws_hot:     this.state.record.ws_hot,
+      ws_open:    this.state.record.ws_open,
+      ws_ret:     this.state.record.ws_ret,
+      ws1_file:   this.state.record.ws1_file,
+      ws2_file:   this.state.record.ws2_file,
+      trans_eval: this.state.record.trans_eval,
+      trans1_file:this.state.record.trans1_file,
+      trans2_file:this.state.record.trans2_file,
+    }
     let r = await this.props.userStore.subProject4(params)
     this.setState({ loading: false, show: false,list: r.data  })
     message.success('提交成功！')
@@ -249,7 +353,8 @@ class listData extends React.Component {
         title: 'ID',
         dataIndex: 'key',
         key: 'key',
-        width: '60px',
+        width: '80px',
+        ...this.getColumnSearchProps('key'),
       },{
         title: '流水号',
         dataIndex: 'sid',
@@ -265,6 +370,17 @@ class listData extends React.Component {
         render: d =>
           <Tag color={formatStat(d)[1]}>
             {formatStat(d)[0]}
+          </Tag>
+      },{
+        title: '操作员',
+        dataIndex: 'id',
+        dataIndex: 'id',
+        width: '80px',
+        filters: getOperFilter(),
+        onFilter: (value, record) => `s${parseInt(record.id/list.length*10)+1}` === value ,
+        render: d =>
+          <Tag>
+            s{parseInt(d/list.length*10)+1}
           </Tag>
       },{
         title: '推荐类型',
@@ -296,9 +412,9 @@ class listData extends React.Component {
         width: '100px',
         render: (text, record, index) => (
           < >
-            {(record.status != 1) && (record.status != 3) && <Button type="default" icon="file" onClick={this.doEdit.bind(this,record)}>详情</Button> }
-            {(record.status == 1) && <Button type="primary" icon="edit" onClick={this.doEdit.bind(this,record)}>开始编辑</Button> }
-            {(record.status == 3) && <Button className="c-orange" type="primary" icon="edit" onClick={this.doEdit.bind(this,record)}>开始编辑</Button> }
+            {(record.exist == 1)&&(record.status != 1) && (record.status != 3) && <Button type="default" icon="file" onClick={this.doEdit.bind(this,record)}>详情</Button> }
+            {(record.exist == 1)&&(record.status == 1) && <Button type="primary" icon="edit" onClick={this.doEdit.bind(this,record)}>开始编辑</Button> }
+            {(record.exist == 1)&&(record.status == 3) && <Button className="c-orange" type="primary" icon="edit" onClick={this.doEdit.bind(this,record)}>开始编辑</Button> }
           </>
         ),
       },

@@ -6,13 +6,19 @@ export function formatStat(state) {
 }
 
 
-// export function formatProcName(index) {
-//   return PROC_NAME[index-1]
-// }
-
-// export function formatProcStat(index) {
-//   return STAT_NAME[index]
-// }
+export function getOperFilter() {
+  return [ {text: 's1', value:'s1'}, 
+           {text: 's2', value:'s2'},
+           {text: 's3', value:'s3'}, 
+           {text: 's4', value:'s4'},
+           {text: 's5', value:'s5'}, 
+           {text: 's6', value:'s6'},
+           {text: 's7', value:'s7'}, 
+           {text: 's8', value:'s8'},
+           {text: 's9', value:'s9'}, 
+           {text: 's10', value:'s10'},
+         ]
+}
 
 export function getStatusFilter() {
   return [ {text: '已提交', value:'已提交'}, {text: '暂存', value:'暂存'} ]
