@@ -7,8 +7,6 @@
 /site/build
 /site/node_modules
 
-/doc
-
 
 # misc
 .DS_Store
