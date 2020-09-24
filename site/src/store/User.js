@@ -43,8 +43,18 @@ class User extends BaseActions {
   }
 
   @action
+  async uploadlib(params) {
+    return await this.post(urls.API_UPLOAD_LIB, params)
+  }
+
+  @action
   async saveProject(params) {
     return await this.post(urls.API_PROJ_SAVE,params)
+  }
+
+  @action
+  async saveProjectM(params) {
+    return await this.post(urls.API_PROJ_SAVE_M,params)
   }
 
   @action

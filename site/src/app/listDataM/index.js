@@ -3,7 +3,7 @@ import { inject } from 'mobx-react'
 import { Input, Button, InputGroup, Radio, Switch, Icon,Tag, Table, Spin, Divider, Result, Modal, message, Skeleton } from "antd";
 import EXIF from '@util/small-exif'
 import Highlighter from 'react-highlight-words';
-import { formatStat,getStatFilter,getMethodFilter,getStatusFilter, getOperFilter}  from 'util/stat'
+import { formatStat,getStatFilter,formatRet,getMethodFilter,getStatusFilter, getOperFilter,getRetFilter}  from 'util/stat'
 import '../listDataS/index.less'
 import {API_SERVER} from 'constant/apis'
 import {STAT, STATUS} from 'constant/data'
@@ -61,7 +61,7 @@ class listDataM extends React.Component {
       record[dataIndex]
         .toString()
         .toLowerCase()
-        .includes(value.toLowerCase()),
+        .includes(value.replace(/(^\s*)|(\s*$)/g, "").toLowerCase()),
     onFilterDropdownVisibleChange: visible => {
       if (visible) {
         setTimeout(() => this.searchInput.select());
@@ -71,7 +71,7 @@ class listDataM extends React.Component {
       this.state.searchedColumn === dataIndex ? (
         <Highlighter
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[this.state.searchText]}
+          searchWords={[this.state.searchText.replace(/(^\s*)|(\s*$)/g, "")]}
           autoEscape
           textToHighlight={text.toString()}
         />
@@ -103,8 +103,8 @@ class listDataM extends React.Component {
 
   doEdit = (e)=>{
     // console.log(e)
-    e.ret = true
-    e.ret_reason = 0
+    e.ret = (e.ret===null)?true:e.ret
+    e.ret_reason = (e.ret===null)?0:e.ret_reason
     this.setState({ record: e, show: true })
   }
 
@@ -120,8 +120,34 @@ class listDataM extends React.Component {
     this.setState({ show: false })
   }
 
-  doShowImg=(e)=>{
-    this.setState({ showImg: true, imgurl: e})
+ doShowImg=(e)=>{
+    this.setState({ showImg: true, imgurl: e},()=>{
+      var box = document.querySelector(".m-img-wrap");
+      var fa = document.querySelector('.m-img');
+      box.onmousedown=function(ev) {
+        var oEvent = ev; 
+        // 浏览器有一些图片的默认事件,这里要阻止
+        oEvent.preventDefault();
+        var disX = oEvent.clientX - box.offsetLeft;
+        var disY = oEvent.clientY - box.offsetTop;
+        fa.onmousemove=function (ev) {
+            oEvent = ev;
+            oEvent.preventDefault();
+            var x = oEvent.clientX -disX;
+            var y = oEvent.clientY -disY;
+            box.style.left = x + 'px';
+            box.style.top = y + 'px';
+        }
+        fa.onmouseleave = function () {
+          fa.onmousemove=null;
+          fa.onmouseup=null;
+        }
+        fa.onmouseup=function() {
+           fa.onmousemove=null;
+           fa.onmouseup=null;
+        } 
+      }
+    })
   }
 
   doCloseImg=()=>{
@@ -129,6 +155,7 @@ class listDataM extends React.Component {
   }
 
   doSave = async () =>{
+
     let params = {
       id:         this.state.record.key,
       zhi_all_d:  this.state.record.zhi_all_d,
@@ -181,8 +208,11 @@ class listDataM extends React.Component {
       trans_eval: this.state.record.trans_eval,
       trans1_file:this.state.record.trans1_file,
       trans2_file:this.state.record.trans2_file,
+      ret:        this.state.record.ret,
+      ret_reason: this.state.record.ret_reason,
     }
-    let r = await this.props.userStore.saveProject(params)
+    this.setState({ loading: true })
+    let r = await this.props.userStore.saveProjectM(params)
     console.log(r)
     this.setState({ loading: false, record: r.data })
     message.success('保存成功！')
@@ -251,6 +281,7 @@ class listDataM extends React.Component {
       ret: this.state.record.ret,
       ret_reason: this.state.record.ret_reason,
     }
+    this.setState({ loading: true  })
     let r = await this.props.userStore.subProject5(params)
     this.setState({ loading: false, show: false,list: r.data  })
     message.success('提交成功！')
@@ -296,6 +327,30 @@ class listDataM extends React.Component {
             {formatStat(d)[0]}
           </Tag>
       },{
+        title: '结果',
+        dataIndex: 'ret',
+        key: 'ret',
+        width: '70px',
+        filters: getRetFilter(),
+        onFilter: (value, record) => {
+          
+          console.log(value)
+          if (value===2) {
+            return (record.ret === null)
+          }else{
+            return (record.ret === value)
+          }
+          
+        },
+        render: d =>{
+          return (
+          <span>
+            {(d==1) && '通过'}
+            {(d==0) && '未通过'}
+            {(d===null) && '待审'}
+          </span>)
+        }
+      },{
         title: '推荐类型',
         dataIndex: 'rec_med',
         key: 'rec_med',
@@ -318,16 +373,17 @@ class listDataM extends React.Component {
         title: '著者',
         dataIndex: 'rec_auth',
         key: 'rec_auth',
+        width: '100px',
         ...this.getColumnSearchProps('rec_auth'),
       },{
         title: '操作',
         key: 'action',
-        width: '180px',
+        width: '160px',
         render: (text, record, index) => (
           < >
             {(record.exist == 1) && <Button type="default" onClick={this.doStatus.bind(this,record)}>状态</Button>}
             {(record.status != 4) && <Button type="default" onClick={this.doEdit.bind(this,record)}>详情</Button> }
-            {(record.exist == 1)&&(record.status == 4) && <Button type="primary" onClick={this.doEdit.bind(this,record)}>开始编辑</Button> }
+            {(record.exist == 1)&&(record.status == 4) && <Button type="primary" onClick={this.doEdit.bind(this,record)}>编辑</Button> }
           </>
         ),
       },
@@ -335,6 +391,7 @@ class listDataM extends React.Component {
 
 
 		return (
+      <Spin spinning={this.state.loading}>
       <div className="g-list">
         <div className="m-list">
           <Table size='small' dataSource={list} columns={columns}/>
@@ -447,7 +504,7 @@ class listDataM extends React.Component {
 
               <div className="m-row-m">
                 <label>是否进入专家评审环节</label>
-                <Switch defaultChecked onChange={this.doAuditRet}/>
+                <Switch defaultChecked onChange={this.doAuditRet} checked={this.state.record.ret} />
               </div>
 
               {(!this.state.record.ret) && 
@@ -817,6 +874,7 @@ class listDataM extends React.Component {
           </div>}
           
       </div>
+      </Spin>
 		)
 	}
 }

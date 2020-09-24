@@ -21,6 +21,8 @@ class App extends React.Component {
                   <Route exact path='/listDataS' component={Loadable({ loader: () => import('./app/listDataS')})}  />
                   <Route exact path='/listDataT' component={Loadable({ loader: () => import('./app/listDataT')})}  />
                   <Route exact path='/listDataM' component={Loadable({ loader: () => import('./app/listDataM')})}  />
+                  <Route exact path='/lib' component={Loadable({ loader: () => import('./app/lib')})}  />
+                
                 </Switch>
 							</NavWrapper>
 						</div>

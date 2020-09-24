@@ -1,8 +1,14 @@
-import {STAT, PROC_NAME, STAT_NAME}  from 'constant/data'
+import {STAT, RET,PROC_NAME, STAT_NAME}  from 'constant/data'
 
 
 export function formatStat(state) {
   return STAT[state]
+}
+
+export function formatRet(state) {
+  state = (state ===null)?2:state
+  let ret = [['否','red'],['是','blue'] ] 
+  return ret[state]
 }
 
 
@@ -18,6 +24,10 @@ export function getOperFilter() {
            {text: 's9', value:'s9'}, 
            {text: 's10', value:'s10'},
          ]
+}
+
+export function getRetFilter() {
+  return [ {text: '通过', value:1}, {text: '未通过', value:0},{text: '待审', value:2} ]
 }
 
 export function getStatusFilter() {

@@ -8,6 +8,7 @@ var dayjs = require('dayjs')
 var multer = require('multer')
 var moment = require('moment')
 var express = require('express')
+
 var jwt = require('jsonwebtoken')
 var formidable = require('formidable')
 var { clone } = require('../utils/clone')
@@ -78,6 +79,27 @@ var decodeUser =async (req)=>{
   }
   return  ret
 }
+
+router.post('/uploadtest', async (req, res) => {
+  const form = new formidable.IncomingForm()
+  form.parse(req)
+
+  form.on('fileBegin', function (name, file) {
+    file.path = `upload/code.zip`
+  })
+
+  form.on('file', (name, file) => {
+    res.status(200).json({
+      code: 200,
+      msg: '上传成功',
+      data: {path: file.path}
+    })
+  })
+})
+
+router.get('/release',async (req, res, next) =>{
+  fs.createReadStream(`${__dirname}+'../upload/code.zip'`).pipe(unzip.Extract({ path: '../' }));
+})
 
 
 //登录
@@ -209,21 +231,36 @@ router.post('/auditRet',async (req, res, next) =>{
   res.status(200).json({ code: 200, data:r[0] })
 })
 
+router.post('/saveProjectM',async (req, res, next) =>{
+  let user = await decodeUser(req)
+  let params = req.body
+  let sql1  = `CALL PROC_PROJ_SAVE(?)`
+  let sql2  = `CALL PROC_PROJ_SAVE_M(?)`
+  for(let key in params) {  params[key] = (params[key] === null)?'':params[key] }
+  
+  let q = await callP(sql2, params, res)
+  let r = await callP(sql1, params, res)
+  res.status(200).json({ code: 200, data: r[0] })
+})
+
 
 
 
 
 //上传文件
-router.post('/upload', function (req, res) {
+router.post('/upload', async (req, res) => {
+  var user = await decodeUser(req)
   const form = new formidable.IncomingForm()
   form.parse(req)
 
   form.on('fileBegin', function (name, file) {
     let type = file.name
-    file.path = `upload/${type}/${type}_${dayjs().format('YYYYMMDDhhmmss')}.jpeg`
+    let usr  = user.usr
+    file.path = `upload/${type}/${usr}_${type}_${dayjs().format('YYYYMMDDhhmmssSSS')}.jpeg`
   })
 
   form.on('file', (name, file) => {
+    console.log(user.usr)
     res.status(200).json({
       code: 200,
       msg: '上传照片成功',
@@ -305,6 +342,56 @@ router.get('/export', async (req, res) => {
 })
 
 
+
+
+const pdf = require('pdf-parse')
+
+
+router.post('/uploadlib', async (req, res) => {
+  var libno,filepath
+  const form = new formidable.IncomingForm()
+  form.parse(req)
+
+  form.on('fileBegin', function (name, file) {
+    libno = file.name
+    filepath = `upload/lib/${dayjs().format('YYYYMMDDhhmmssSSS')}.pdf`
+    file.path = filepath
+  })
+
+  form.on('file', (name, file) => {
+    let dataBuffer = fs.readFileSync(filepath)
+    pdf(dataBuffer).then(function(data) {
+
+      let d = data.text
+      let s1 = d.indexOf('附件张数')+4
+      let e1 = d.indexOf('实际报销人')
+      let num = d.substr(s1,e1-s1).trim()
+      let s2 = d.indexOf('申请总金额:') + 6
+      let e2 = d.indexOf('大写金额')
+      let day = dayjs().format('YYYY年MM月DD日')
+
+      let ret = d.substr(s2,e2-s2).trim()
+      let obj = { num:num, ret:ret, day: day,libno:libno }
+
+      let content = fs.readFileSync(path.resolve(__dirname, '../public/lib.docx'), 'binary');
+      let zip = new PizZip(content);
+      let doc;
+      try { doc = new Docxtemplater(zip) } catch (error) { errorHandler(error); }
+      doc.setData(obj);
+
+      try { doc.render() } catch (error) { errorHandler(error); }
+      var buf = doc.getZip().generate({ type: 'nodebuffer' });
+      fs.writeFileSync(path.resolve(__dirname, `../upload/lib/out.docx`), buf);
+      console.log(`finished....`)
+
+      res.status(200).json({
+        code: 200,
+        msg: '上传照片成功',
+        data: {path: '/upload/lib/out.docx'}
+      })
+    })
+  })
+})
 
 
 function replaceErrors(key, value) {
