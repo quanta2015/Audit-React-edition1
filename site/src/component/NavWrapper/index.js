@@ -35,8 +35,9 @@ class NavWrapper extends React.Component {
 
   async componentDidMount() { 
     let r = await this.props.userStore.setAuditRet()
-    this.setState({ ret: r.data })
-    this.doTimer()
+    console.log(r)
+    // this.setState({ ret: r.data })
+    // this.doTimer()
   }
 
   componentWillUnmount() {
@@ -58,9 +59,9 @@ class NavWrapper extends React.Component {
     let r = (this.props.userStore.currUser)?parseInt(this.props.userStore.currUser.role):-1
 
     switch(r) {
-      case 0: path = '/listDataS';break;
-      case 1: path = '/listDataT';break;
-      case 2: path = '/listDataM';break;
+      case 0: path = '/listS';break;
+      case 1: path = '/listT';break;
+      case 2: path = '/listM';break;
     }
 
 

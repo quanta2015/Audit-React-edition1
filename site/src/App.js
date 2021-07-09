@@ -16,13 +16,11 @@ class App extends React.Component {
 						<div className='app-root'>
 							<NavWrapper>
 								<Switch>
-                  <Route exact path='/' component={Loadable({ loader: () => import('./app/login')})}  />
-                  
-                  <Route exact path='/listDataS' component={Loadable({ loader: () => import('./app/listDataS')})}  />
-                  <Route exact path='/listDataT' component={Loadable({ loader: () => import('./app/listDataT')})}  />
-                  <Route exact path='/listDataM' component={Loadable({ loader: () => import('./app/listDataM')})}  />
-                  <Route exact path='/lib' component={Loadable({ loader: () => import('./app/lib')})}  />
-                
+                  <Route exact path='/'      component={Loadable({loader:()=>import('./app/login')})} />
+                  <Route exact path='/listS' component={Loadable({loader:()=>import('./app/listDataS')})} />
+                  <Route exact path='/listT' component={Loadable({loader:()=>import('./app/listDataT')})} />
+                  <Route exact path='/listM' component={Loadable({loader:()=>import('./app/listDataM')})} />
+                  <Route exact path='/lib'   component={Loadable({loader:()=>import('./app/lib')})} />
                 </Switch>
 							</NavWrapper>
 						</div>

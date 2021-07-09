@@ -15,4 +15,4 @@ export const API_PROJ_STATUS  = API_SERVER + '/setProjStatus'
 export const API_AUDIT_RET    = API_SERVER + '/auditRet'
 export const API_PROJ_SAVE_M  = API_SERVER + '/saveProjectM'
 export const API_UPLOAD_LIB   = API_SERVER + '/uploadlib'
-
+export const API_PROJ_DETAIL  = API_SERVER + '/getProjectDetail'

@@ -38,6 +38,11 @@ class User extends BaseActions {
   }
 
   @action
+  async getProjDetail(params) {
+    return await this.post(urls.API_PROJ_DETAIL,params)
+  }
+
+  @action
   async upload(params) {
     return await this.post(urls.API_UPLOAD, params)
   }

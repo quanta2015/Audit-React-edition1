@@ -30,9 +30,9 @@ class Login extends React.Component {
           console.log(r.data)
 
           switch(parseInt(r.data.role)) {
-            case 0: this.props.history.push("/listDataS");break;
-            case 1: this.props.history.push("/listDataT");break;
-            case 2: this.props.history.push("/listDataM");break;
+            case 0: this.props.history.push("/listS");break;
+            case 1: this.props.history.push("/listT");break;
+            case 2: this.props.history.push("/listM");break;
           }
           
         } else if (r && r.code === 301) {
